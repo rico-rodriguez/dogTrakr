@@ -1,30 +1,31 @@
 // component
-import SvgColor from '../../../components/svg-color';
+import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+const icon = (name) => <Iconify icon={name} width={24} height={24} />;
 
 const navConfig = [
   {
-    title: 'dashboard',
+    title: 'home',
     path: '/dashboard/app',
-    icon: icon('ic_analytics'),
+    icon: icon('ant-design:home-twotone'),
+  },
+
+  {
+    title: 'Activity',
+    path: '/dashboard/products',
+    icon: icon('fluent:shifts-activity-20-filled'),
+  },
+  {
+    title: 'Community',
+    path: '/dashboard/blog',
+    icon: icon('fluent:people-community-28-filled'),
   },
   {
     title: 'user',
     path: '/dashboard/user',
-    icon: icon('ic_user'),
-  },
-  {
-    title: 'product',
-    path: '/dashboard/products',
-    icon: icon('ic_cart'),
-  },
-  {
-    title: 'blog',
-    path: '/dashboard/blog',
-    icon: icon('ic_blog'),
+    icon: icon('mdi:user'),
   },
   // {
   //   title: 'login',

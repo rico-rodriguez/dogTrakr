@@ -1,5 +1,7 @@
-export { default as ProductCard } from './ProductCard';
-export { default as ProductList } from './ProductList';
-export { default as ProductSort } from './ProductSort';
-export { default as ProductCartWidget } from './ProductCartWidget';
-export { default as ProductFilterSidebar } from './ProductFilterSidebar';
+export { default as LogNewActivity } from './LogNewActivity';
+export { default as Modal } from './Modal';
+export { default as DataTable } from './DataTable';
+export { default as createRecord } from './createRecord';
+// export { default as editRecord } from './editRecord';
+export { default as navRecords } from './navRecords';
+export { default as viewRecords } from './viewRecords';
