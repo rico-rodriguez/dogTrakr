@@ -10,7 +10,7 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import View from './sections/@dashboard/products/viewRecords';
-import Create from './sections/@dashboard/products/createRecord';
+import Create from './sections/@dashboard/products/CreateRecord';
 
 // ----------------------------------------------------------------------
 

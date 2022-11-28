@@ -3,9 +3,8 @@ import { useParams, useNavigate } from 'react-router';
 
 export default function Edit() {
   const [form, setForm] = useState({
-    name: '',
-    position: '',
-    level: '',
+    time: '',
+    activity: '',
     records: [],
   });
   const params = useParams();
@@ -47,9 +46,8 @@ export default function Edit() {
   async function onSubmit(e) {
     e.preventDefault();
     const editedPerson = {
-      name: form.name,
-      position: form.position,
-      level: form.level,
+      time: form.time,
+      activity: form.activity,
     };
 
     // This will send a post request to update the data in the database.
@@ -94,42 +92,42 @@ export default function Edit() {
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionIntern"
+              name="activity"
+              id="walk"
               value="Intern"
-              checked={form.level === 'Intern'}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              checked={form.activity === 'walk'}
+              onChange={(e) => updateForm({ activity: e.target.value })}
             />
-            <label htmlFor="positionIntern" className="form-check-label">
-              Intern
+            <label htmlFor="walk" className="form-check-label">
+              Walk
             </label>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionJunior"
-              value="Junior"
-              checked={form.level === 'Junior'}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="activity"
+              id="meal"
+              value="Meal"
+              checked={form.activity === 'Meal'}
+              onChange={(e) => updateForm({ activity: e.target.value })}
             />
-            <label htmlFor="positionJunior" className="form-check-label">
-              Junior
+            <label htmlFor="meal" className="form-check-label">
+              Meal
             </label>
           </div>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
               type="radio"
-              name="positionOptions"
-              id="positionSenior"
-              value="Senior"
-              checked={form.level === 'Senior'}
-              onChange={(e) => updateForm({ level: e.target.value })}
+              name="activity"
+              id="medicine"
+              value="Medicine"
+              checked={form.activity === 'Medicine'}
+              onChange={(e) => updateForm({ activity: e.target.value })}
             />
-            <label htmlFor="positionSenior" className="form-check-label">
-              Senior
+            <label htmlFor="medicine" className="form-check-label">
+              Medicine
             </label>
           </div>
         </div>

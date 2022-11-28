@@ -34,12 +34,19 @@ export default function LogNewActivity({ title, total, icon, activity, color = '
   return (
     <Card
       sx={{
-        py: 5,
+        py: 2,
+        px: 3,
         boxShadow: 2,
         textAlign: 'center',
         color: (theme) => theme.palette[color].darker,
         bgcolor: (theme) => theme.palette[color].lighter,
-        height: '100%',
+        width: {
+          xs: 500, // theme.breakpoints.up('xs')
+          sm: 500, // theme.breakpoints.up('sm')
+          md: 500, // theme.breakpoints.up('md')
+          lg: 500, // theme.breakpoints.up('lg')
+          xl: 500, // theme.breakpoints.up('xl')
+        },
         ...sx,
       }}
       {...other}

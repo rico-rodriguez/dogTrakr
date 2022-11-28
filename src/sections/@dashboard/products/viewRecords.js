@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 
 const Record = (props) => (
   <tr>
-    <td>{props.record.name}</td>
-    <td>{props.record.position}</td>
-    <td>{props.record.level}</td>
+    <td>{props.record.time}</td>
+    <td>{props.record.activity}</td>
     <td>
       <Link className="btn btn-link" to={`/edit/${props.record._id}`}>
         Edit
@@ -68,10 +67,8 @@ export default function RecordList() {
       <table className="table table-striped" style={{ marginTop: 20 }}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Level</th>
-            <th>Action</th>
+            <th>Time</th>
+            <th>Activity</th>
           </tr>
         </thead>
         <tbody>{recordList()}</tbody>
