@@ -5,16 +5,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Modal } from '.';
 
 const time = new Date();
 const yyyymmdd = new Date().toLocaleDateString('en-CA');
 const timeString = time.toTimeString().split(' ')[0].slice(0, 5);
-console.log(yyyymmdd);
 
-export default function Create() {
+export default function Create({ handleClose }) {
   const [value, onChange] = useState();
   const [date, setDate] = useState();
-  const navigate = useNavigate();
   const [form, setForm] = useState({
     date: { date }.date,
     time: { value }.value,
@@ -30,28 +29,34 @@ export default function Create() {
 
   // This function will handle the submission.
   async function onSubmit(e) {
-    updateForm({ date: form.date, time: form.time, activity: form.activity });
     e.preventDefault();
+    handleClose();
+    updateForm({ date: form.date, time: form.time, activity: form.activity });
+    if (form.date === undefined || form.time === undefined || form.activity === undefined) {
+      console.log(form.date);
+      console.log(form.time);
+      window.alert('Please enter a date and time');
+      e.preventDefault();
+      return;
+    }
 
     // When a post request is sent to the create url, we'll add a new record to the database.
-    const newPerson = { ...form };
+    const LogNewActivity = { ...form };
 
-    await fetch('http://localhost:5000/record/add', {
+    await fetch('http://localhost:3000/record/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newPerson),
+      body: JSON.stringify(LogNewActivity),
     }).catch((error) => {
       window.alert(error);
     });
 
     setForm({ date: '', time: '', activity: '' });
-    refreshTable();
-    navigate('/dashboard/products');
-  }
-  function refreshTable() {
-    window.location.reload();
+    // reload table without refreshing page
+
+    // navigate('/dashboard/products');
   }
 
   // This following section will display the form that takes the input from the user.
@@ -81,7 +86,7 @@ export default function Create() {
           />
           <br />
           <FormControl>
-            <RadioGroup aria-labelledby="frm-grp" defaultValue="walk" name="radio-buttons-group">
+            <RadioGroup aria-labelledby="frm-grp" defaultValue="Walk" name="radio-buttons-group">
               <FormControlLabel
                 value="Walk"
                 control={<Radio />}
@@ -98,6 +103,12 @@ export default function Create() {
                 value="Medication"
                 control={<Radio />}
                 label="Medication"
+                onChange={(e) => updateForm({ activity: e.target.value })}
+              />
+              <FormControlLabel
+                value="Potty"
+                control={<Radio />}
+                label="Potty"
                 onChange={(e) => updateForm({ activity: e.target.value })}
               />
             </RadioGroup>

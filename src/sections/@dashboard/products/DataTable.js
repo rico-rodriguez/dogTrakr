@@ -14,11 +14,13 @@ export default function DataTable() {
   const [pageSize, setPageSize] = React.useState(5);
 
   useEffect(() => {
-    fetch('http://localhost:5000/record/')
-      .then((data) => data.json())
-      .then((data) => setTableData(data));
+    const timer = setInterval(() => {
+      fetch('http://localhost:3000/record/')
+        .then((data) => data.json())
+        .then((data) => setTableData(data));
+    }, 500);
+    return () => clearInterval(timer);
   }, []);
-  console.log(tableData);
 
   return (
     <Box
@@ -26,35 +28,41 @@ export default function DataTable() {
         height: 300,
         width: '100%',
         '& .walk': {
-          backgroundColor: '#b9d5ff91',
-          backgroundImage: 'linear-gradient(315deg, #b9d5ff91 0%, #d1e9fc 74%)',
-          borderRadius: '5px',
-          boxShadow: '0 0 10px 0 #9ca8ff91',
+          backgroundImage: 'linear-gradient(315deg, #b9d5ff91 2%, #d1e9fc 2%) ',
+          borderRadius: '2px',
+          boxShadow: '1px 0 5px 0 #9ca8ff91',
         },
         '& .MuiDataGrid-row:hover': {
           backgroundImage: 'gradient(315deg, #b9d5ff91 0%, #9ca8ff91 74%)',
-          borderRadius: '5px',
-          boxShadow: '0 0 10px 0 #9ca8ff91',
+          borderRadius: '2px',
+          boxShadow: '1px 0 5px 0 #9ca8ff91',
           color: '#1a3e72',
-          transform: 'scale(1.01)',
+          transform: 'scale(.99)',
+          opacity: 0.5,
         },
         '& .MuiDataGrid-row.Mui-selected, .MuiDataGrid-row.Mui-selected:hover': {
           backgroundImage: 'linear-gradient(315deg, #fff 0%, #fff 74%)',
-          borderRadius: '5px',
-          boxShadow: '0 0 10px 0 #9ca8ff91',
+          borderRadius: '2px',
+          boxShadow: '1px 0 5px 0 #9ca8ff91',
           color: '#1a3e72',
         },
         '& .meal': {
           backgroundColor: '#ff943975',
           backgroundImage: 'linear-gradient(315deg, #fff3b4 0%, #fff7cd 74%)',
-          borderRadius: '5px',
-          boxShadow: '0 0 10px 0 #9ca8ff91',
+          borderRadius: '2px',
+          boxShadow: '1px 0 5px 0 #9ca8ff91',
         },
         '& .medication': {
           backgroundColor: '#a5ff8e75',
           backgroundImage: 'linear-gradient(315deg, #ffe7d9 0%, #ffd8c1 74%)',
-          borderRadius: '5px',
-          boxShadow: '0 0 10px 0 #9ca8ff91',
+          borderRadius: '2px',
+          boxShadow: '1px 0 5px 0 #9ca8ff91',
+        },
+        '& .potty': {
+          backgroundColor: '#a5ff8e75',
+          backgroundImage: 'linear-gradient(315deg, #dcf4fe 0%, #e8f7fe 74%)',
+          borderRadius: '2px',
+          boxShadow: '1px 0 5px 0 #9ca8ff91',
         },
       }}
     >
@@ -64,7 +72,13 @@ export default function DataTable() {
             if (params.field === 'date' || params.field === 'time') {
               return '';
             }
-            return params.value === 'Walk' ? 'walk' : params.value === 'Meal' ? 'meal' : 'medication';
+            return params.value === 'Walk'
+              ? 'walk'
+              : params.value === 'Meal'
+              ? 'meal'
+              : params.value === 'Potty'
+              ? 'potty'
+              : 'medication';
           }}
           initialState={{
             sorting: {

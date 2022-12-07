@@ -14,7 +14,7 @@
     "plugin:import/typescript"
   ],
   "plugins": ["react", "react-hooks", "prettier"],
-  "parser": "@babel/eslint-parser",
+  // "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 8,
     "requireConfigFile": false,
@@ -40,6 +40,7 @@
     "prefer-template": 0,
     "no-extra-boolean-cast": 1,
     "no-lone-blocks": 1,
+    "dot-notation": 1,
     "array-callback-return": 1,
     "react/button-has-type": 1,
     "no-restricted-exports": 0,

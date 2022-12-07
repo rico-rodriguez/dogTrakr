@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import CreateRecord from './CreateRecord';
 import LogNewActivity from './LogNewActivity';
 import { DataTable } from '.';
-import timeSinceActivity from './TimeSinceActivity';
+import TimeSince from './TimeSinceActivity';
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -25,26 +25,88 @@ export default function FormDialog() {
       <Container>
         <Grid container spacing={0}>
           <Grid item xs={12} sm={6} md={6} lg={3}>
-            <Button variant="text" onClick={handleClickOpen} fullWidth>
-              <LogNewActivity title={timeSinceActivity} activity="walk" icon={'healthicons:guide-dog-outline'} />
+            <Button
+              variant="text"
+              onClick={handleClickOpen}
+              fullWidth
+              sx={[
+                {
+                  '&:hover': {
+                    transform: 'scale(.90)',
+                    opacity: 0.7,
+                  },
+                },
+              ]}
+            >
+              <LogNewActivity
+                title=<TimeSince activityType="Walk" />
+                activity="walk"
+                icon={'healthicons:guide-dog-outline'}
+              />
             </Button>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6} lg={3}>
-            <Button variant="text" onClick={handleClickOpen} fullWidth>
-              <LogNewActivity title="1hr" color="info" activity="potty" icon={'la:poop'} />
+            <Button
+              variant="text"
+              onClick={handleClickOpen}
+              fullWidth
+              sx={[
+                {
+                  '&:hover': {
+                    transform: 'scale(.90)',
+                    opacity: 0.7,
+                  },
+                },
+              ]}
+            >
+              <LogNewActivity title=<TimeSince activityType="Potty" /> color="info" activity="potty" icon={'la:poop'} />
             </Button>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6} lg={3}>
-            <Button variant="text" onClick={handleClickOpen} fullWidth>
-              <LogNewActivity title="10m" color="warning" activity="meal" icon={'tabler:dog-bowl'} />
+            <Button
+              variant="text"
+              onClick={handleClickOpen}
+              fullWidth
+              sx={[
+                {
+                  '&:hover': {
+                    transform: 'scale(.90)',
+                    opacity: 0.7,
+                  },
+                },
+              ]}
+            >
+              <LogNewActivity
+                title=<TimeSince activityType="Meal" />
+                color="warning"
+                activity="meal"
+                icon={'tabler:dog-bowl'}
+              />
             </Button>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6} lg={3}>
-            <Button variant="text" onClick={handleClickOpen} fullWidth>
-              <LogNewActivity title="3hr20m" color="error" activity="medication" icon={'ph:pill-light'} />
+            <Button
+              variant="text"
+              onClick={handleClickOpen}
+              fullWidth
+              sx={[
+                {
+                  '&:hover': {
+                    transform: 'scale(.90)',
+                    opacity: 0.7,
+                  },
+                },
+              ]}
+            >
+              <LogNewActivity
+                title=<TimeSince activityType="Medication" />
+                color="error"
+                activity="medication"
+                icon={'ph:pill-light'}
+              />
             </Button>
           </Grid>
           <DataTable />
@@ -63,7 +125,7 @@ export default function FormDialog() {
                 alignItems: 'center',
               }}
             >
-              <CreateRecord />
+              <CreateRecord handleClose={handleClose} />
             </DialogContent>
           </Dialog>
         </Grid>
