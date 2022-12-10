@@ -4,11 +4,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Modal } from '.';
 
 const time = new Date();
 const yyyymmdd = new Date().toLocaleDateString('en-CA');
+console.log(yyyymmdd);
 const timeString = time.toTimeString().split(' ')[0].slice(0, 5);
 
 export default function Create({ handleClose }) {

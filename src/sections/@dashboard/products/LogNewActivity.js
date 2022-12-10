@@ -24,10 +24,13 @@ const StyledIcon = styled('div')(({ theme }) => ({
 LogNewActivity.propTypes = {
   color: PropTypes.string,
   icon: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  total: PropTypes.number,
   activity: PropTypes.string.isRequired,
   sx: PropTypes.object,
+};
+LogNewActivity.defaultProps = {
+  total: 0,
 };
 
 export default function LogNewActivity({ title, total, icon, activity, color = 'primary', sx, ...other }) {

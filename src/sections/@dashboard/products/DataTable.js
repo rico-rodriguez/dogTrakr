@@ -2,10 +2,12 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const columns = [
-  { field: 'date', headerName: 'Date', width: 400, type: 'dateTime', flex: 1 },
-  { field: 'time', headerName: 'Time', width: 400, type: 'dateTime', flex: 1 },
+  { field: 'date', headerName: 'Date', width: 400, type: 'dateTime', flex: 1, editable: true },
+  { field: 'time', headerName: 'Time', width: 400, type: 'dateTime', flex: 1, editable: true },
   { field: 'activity', headerName: 'Activity', width: 200, type: 'number', align: 'center', flex: 0 },
 ];
 
@@ -17,11 +19,48 @@ export default function DataTable() {
     const timer = setInterval(() => {
       fetch('http://localhost:3000/record/')
         .then((data) => data.json())
-        .then((data) => setTableData(data));
+        .then((data) =>
+          setTableData(
+            data.map((record) => ({
+              ...record,
+              id: record._id, // Add the 'id' property to each record
+            }))
+          )
+        );
     }, 500);
     return () => clearInterval(timer);
   }, []);
+  const useFakeMutation = () => {
+    return React.useCallback(
+      (user) =>
+        new Promise((resolve, reject) =>
+          setTimeout(() => {
+            if (user.name?.trim() === '') {
+              reject(new Error("Error while saving user: name can't be empty."));
+            } else {
+              resolve({ ...user, name: user.name?.toUpperCase() });
+            }
+          }, 200)
+        ),
+      []
+    );
+  };
+  const mutateRow = useFakeMutation();
+  const [snackbar, setSnackbar] = React.useState(null);
+  const handleCloseSnackbar = () => setSnackbar(null);
 
+  const processRowUpdate = React.useCallback(
+    async (newRow) => {
+      // Make the HTTP request to save in the backend
+      const response = await mutateRow(newRow);
+      setSnackbar({ children: 'User successfully saved', severity: 'success' });
+      return response;
+    },
+    [mutateRow]
+  );
+  const handleProcessRowUpdateError = React.useCallback((error) => {
+    setSnackbar({ children: error.message, severity: 'error' });
+  }, []);
   return (
     <Box
       sx={{
@@ -87,9 +126,11 @@ export default function DataTable() {
           }}
           components={{ Toolbar: GridToolbar }}
           getRowId={(row) => row._id}
+          experimentalFeatures={{ newEditingApi: true }}
           rows={tableData}
-          // sortModel={[{ field: 'time', sort: 'asc' }]}
           columns={columns}
+          processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={handleProcessRowUpdateError}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 15]}
@@ -109,6 +150,16 @@ export default function DataTable() {
             ':active': { boxShadow: (theme) => theme.customShadows.z24 },
           }}
         />
+        {!!snackbar && (
+          <Snackbar
+            open
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            onClose={handleCloseSnackbar}
+            autoHideDuration={6000}
+          >
+            <Alert {...snackbar} onClose={handleCloseSnackbar} />
+          </Snackbar>
+        )}
       </div>
     </Box>
   );

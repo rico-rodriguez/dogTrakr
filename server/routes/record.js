@@ -7,6 +7,8 @@ const recordRoutes = express.Router();
 
 // This will help us connect to the database
 const dbo = require('../db/conn');
+// // Import the `ObjectId` function from the `mongodb` package
+// const { ObjectId } = require('mongodb');
 
 // This help convert the id from string to ObjectId for the _id.
 const ObjectId = require('mongodb').ObjectId;
@@ -48,8 +50,11 @@ recordRoutes.route('/record/add').post(function (req, response) {
 });
 
 // This section will help you update a record by id.
-recordRoutes.route('/update/:id').post(function (req, response) {
+recordRoutes.route('/record/update/:id').put(function (req, res) {
   let db_connect = dbo.getDb();
+  if (!db_connect.collection) {
+    return res.status(500).send('Error: db_connect object does not have a collection property');
+  }
   let myquery = { _id: ObjectId(req.params.id) };
   let newvalues = {
     $set: {
@@ -58,13 +63,12 @@ recordRoutes.route('/update/:id').post(function (req, response) {
       activity: req.body.activity,
     },
   };
-  db_connect.collection('records').updateOne(myquery, newvalues, function (err, res) {
+  db_connect.collection('records').updateOne(myquery, newvalues, function (err, result) {
     if (err) throw err;
     console.log('1 document updated');
-    response.json(res);
+    res.json(result);
   });
 });
-
 // This section will help you delete a record
 recordRoutes.route('/:id').delete((req, response) => {
   let db_connect = dbo.getDb();
