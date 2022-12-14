@@ -9,4 +9,4 @@ Tracks your dog's activity, logs to a table that is connected with MongoDB.
 - [ ] Add authentication and user registration
 - [ ] Sync charts with database values to show appropriate results
 
-![2022-12-09 05_42_27-NVIDIA GeForce Overlay](https://user-images.githubusercontent.com/97664519/206563805-56a4019d-b673-44c9-ae59-1256f078565b.png)
+![2022-12-14 09_05_07-server js - dogTrakr - Visual Studio Code](https://user-images.githubusercontent.com/97664519/207472023-69bf8c97-f388-476c-b2e2-33862ed49538.png)
