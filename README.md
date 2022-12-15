@@ -5,6 +5,7 @@ Full-Stack: ReactJS. MongoDB. MaterialsUI.
 Tracks your dog's activity, logs to a table that is connected with MongoDB.
 
 - [X] Make the 'Time Since' values reflect database values
+- [X] Implement CRUD functionality on the activities page
 - [ ] Create a Map page to help the user map potential walks
 - [ ] Add authentication and user registration
 - [ ] Sync charts with database values to show appropriate results
