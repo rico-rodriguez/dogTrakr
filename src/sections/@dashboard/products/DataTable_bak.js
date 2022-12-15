@@ -5,12 +5,6 @@ import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-const columns = [
-  { field: 'date', headerName: 'Date', width: 400, type: 'dateTime', flex: 1, editable: true },
-  { field: 'time', headerName: 'Time', width: 400, type: 'dateTime', flex: 1, editable: true },
-  { field: 'activity', headerName: 'Activity', width: 200, type: 'number', align: 'center', flex: 0 },
-];
-
 export default function DataTable() {
   const [tableData, setTableData] = useState([]);
   const [pageSize, setPageSize] = React.useState(5);
@@ -30,15 +24,16 @@ export default function DataTable() {
     }, 500);
     return () => clearInterval(timer);
   }, []);
+
   const useFakeMutation = () => {
     return React.useCallback(
-      (user) =>
+      (date) =>
         new Promise((resolve, reject) =>
           setTimeout(() => {
-            if (user.name?.trim() === '') {
-              reject(new Error("Error while saving user: name can't be empty."));
+            if (date.date == null) {
+              reject(new Error("Error while saving date: name can't be empty."));
             } else {
-              resolve({ ...user, name: user.name?.toUpperCase() });
+              resolve({ ...date, date: date.date?.toLocaleDateString('en-CA') });
             }
           }, 200)
         ),
@@ -50,17 +45,70 @@ export default function DataTable() {
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const processRowUpdate = React.useCallback(
-    async (newRow) => {
-      // Make the HTTP request to save in the backend
+    async (newRow, oldRow) => {
+      await fetch(`http://localhost:3000/record/${newRow.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          _id: newRow.id,
+          date: newRow.date.toLocaleDateString('en-CA'),
+          time: newRow.time,
+          activity: newRow.activity,
+        }),
+      }).catch((error) => {
+        window.alert(error);
+      });
       const response = await mutateRow(newRow);
       setSnackbar({ children: 'User successfully saved', severity: 'success' });
       return response;
     },
     [mutateRow]
   );
+
+  // const valueSetter = (newValue, rowData) => {
+  //   return {
+  //     ...rowData,
+  //     date: newValue, // Update the 'date' property in the row data
+  //   };
+  // };
+  const columns = [
+    {
+      field: 'date',
+      headerName: 'Date',
+      width: 400,
+      type: 'date',
+      flex: 1,
+      editable: true,
+      // valueSetter: (newValue, oldValue, newRow) => {
+      //   if (newValue === oldValue) {
+      //     return false; // Return false to cancel the change.
+      //   }
+
+      //   // Update the row with the new value.
+      //   newRow = newValue;
+
+      //   // Return true to signal that the value has been set.
+      //   return true;
+      // },
+    },
+    {
+      field: 'time',
+      headerName: 'Time',
+      width: 400,
+      type: 'dateTime',
+      flex: 1,
+      editable: true,
+    },
+    { field: 'activity', headerName: 'Activity', width: 200, type: 'number', align: 'center', flex: 0 },
+  ];
   const handleProcessRowUpdateError = React.useCallback((error) => {
     setSnackbar({ children: error.message, severity: 'error' });
   }, []);
+  const getRowId = (rowData) => {
+    return rowData._id;
+  };
   return (
     <Box
       sx={{
@@ -125,15 +173,17 @@ export default function DataTable() {
             },
           }}
           components={{ Toolbar: GridToolbar }}
-          getRowId={(row) => row._id}
+          getRowId={getRowId}
           experimentalFeatures={{ newEditingApi: true }}
           rows={tableData}
           columns={columns}
           processRowUpdate={processRowUpdate}
           onProcessRowUpdateError={handleProcessRowUpdateError}
+          // onCellValueChanged={valueSetter}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 15]}
+          // valueSetter={valueSetter}
           rowHeight={60}
           header
           sx={{

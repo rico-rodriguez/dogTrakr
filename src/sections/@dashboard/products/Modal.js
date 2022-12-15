@@ -6,8 +6,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import CreateRecord from './CreateRecord';
 import LogNewActivity from './LogNewActivity';
-import { DataTable } from '.';
+// import { DataTable } from '.';
 import TimeSince from './TimeSinceActivity';
+import ActivityCardsFromDB from './ActivityCardsFromDB';
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -109,7 +110,12 @@ export default function FormDialog() {
               />
             </Button>
           </Grid>
-          <DataTable />
+          {/* <DataTable /> */}
+          <Container>
+            <Grid container xs={12}>
+              <ActivityCardsFromDB />
+            </Grid>
+          </Container>
           <Dialog open={open} onClose={handleClose}>
             <DialogContent
               sx={{

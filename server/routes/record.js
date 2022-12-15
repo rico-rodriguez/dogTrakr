@@ -13,6 +13,15 @@ const dbo = require('../db/conn');
 // This help convert the id from string to ObjectId for the _id.
 const ObjectId = require('mongodb').ObjectId;
 
+const bodyParser = require('body-parser');
+
+const app = express();
+
+// Parse JSON bodies
+app.use(bodyParser.json());
+
+// Parse URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 // This section will help you get a list of all the records.
 recordRoutes.route('/record').get(function (req, res) {
   let db_connect = dbo.getDb('employees');
@@ -50,11 +59,10 @@ recordRoutes.route('/record/add').post(function (req, response) {
 });
 
 // This section will help you update a record by id.
-recordRoutes.route('/record/update/:id').put(function (req, res) {
+
+recordRoutes.route('/record/:id').put(function (req, response) {
+  console.log(req.body);
   let db_connect = dbo.getDb();
-  if (!db_connect.collection) {
-    return res.status(500).send('Error: db_connect object does not have a collection property');
-  }
   let myquery = { _id: ObjectId(req.params.id) };
   let newvalues = {
     $set: {
@@ -63,20 +71,45 @@ recordRoutes.route('/record/update/:id').put(function (req, res) {
       activity: req.body.activity,
     },
   };
-  db_connect.collection('records').updateOne(myquery, newvalues, function (err, result) {
-    if (err) throw err;
-    console.log('1 document updated');
-    res.json(result);
+  db_connect.collection('records').updateOne(myquery, newvalues, function (err, res) {
+    if (err) {
+      // Log the error
+      console.error(err);
+      // Send a response indicating that there was an error
+      response.send({
+        success: false,
+        message: 'Failed to update record',
+      });
+      return;
+    }
+    // Send a response indicating that the record was updated successfully
+    response.send({
+      success: true,
+      message: 'Record updated successfully',
+    });
   });
 });
+
 // This section will help you delete a record
-recordRoutes.route('/:id').delete((req, response) => {
+recordRoutes.route('/record/:id').delete(function (req, response) {
   let db_connect = dbo.getDb();
   let myquery = { _id: ObjectId(req.params.id) };
-  db_connect.collection('records').deleteOne(myquery, function (err, obj) {
-    if (err) throw err;
-    console.log('1 document deleted');
-    response.json(obj);
+  db_connect.collection('records').deleteOne(myquery, function (err, res) {
+    if (err) {
+      // Log the error
+      console.error(err);
+      // Send a response indicating that there was an error
+      response.send({
+        success: false,
+        message: 'Failed to delete record',
+      });
+      return;
+    }
+    // Send a response indicating that the record was deleted successfully
+    response.send({
+      success: true,
+      message: 'Record deleted successfully',
+    });
   });
 });
 
