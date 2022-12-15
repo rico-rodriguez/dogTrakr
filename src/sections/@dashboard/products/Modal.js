@@ -111,11 +111,7 @@ export default function FormDialog() {
             </Button>
           </Grid>
           {/* <DataTable /> */}
-          <Container>
-            <Grid container xs={12}>
-              <ActivityCardsFromDB />
-            </Grid>
-          </Container>
+          <ActivityCardsFromDB />
           <Dialog open={open} onClose={handleClose}>
             <DialogContent
               sx={{

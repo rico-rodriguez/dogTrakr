@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, CardContent, Button } from '@mui/material';
-import { Container, Typography, Grid } from '@mui/material';
+import { Card, CardContent, Button, Box } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import { TextField } from '@mui/material';
+
+import { Typography, Grid } from '@mui/material';
+import { display, Stack } from '@mui/system';
 
 // import moment from 'moment';
 
@@ -58,16 +65,81 @@ const RecordCard = ({ record }) => {
         }
       });
   };
-
+  const customBackgroundColor =
+    record.activity === 'Walk'
+      ? '#ddeefc'
+      : record.activity === 'Potty'
+      ? '#dcf4fe'
+      : record.activity === 'Meal'
+      ? '#fdf7db'
+      : '#fdece3';
   return (
     <>
-      <Card>
-        <CardContent>
-          <input type="date" value={date} onChange={handleDateChange} />
-          <input type="time" value={time} onChange={handleTimeChange} />
-          <input type="text" value={activity} onChange={handleActivityChange} />
-          <Button onClick={handleSave}>Save</Button>
-          <Button onClick={handleDelete}>Delete</Button>
+      <Card
+        sx={{
+          margin: '10px',
+          width: '100%',
+          // height: '150px',
+          backgroundColor: customBackgroundColor,
+        }}
+      >
+        <CardContent
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flex: '1 1 auto',
+            justifyContent: 'center',
+            alignItems: 'center',
+            rowGap: '10px',
+          }}
+        >
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="activity-select-label">Activity</InputLabel>
+              <Select
+                labelId="activity-select-label"
+                id="activity-select"
+                value={activity}
+                label="Activity"
+                onChange={handleActivityChange}
+              >
+                <MenuItem value="">Select an activity</MenuItem>
+                <MenuItem value="Potty">Potty</MenuItem>
+                <MenuItem value="Meal">Meal</MenuItem>
+                <MenuItem value="Medication">Medication</MenuItem>
+                <MenuItem value="Walk">Walk</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <TextField
+            type="date"
+            value={date}
+            onChange={handleDateChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            type="time"
+            value={time}
+            onChange={handleTimeChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 min
+            }}
+          />
+
+          <span>
+            <Button variant="outlined" color="success" onClick={handleSave}>
+              Save
+            </Button>
+            <span> </span>
+            <Button variant="outlined" color="error" onClick={handleDelete}>
+              Delete
+            </Button>
+          </span>
         </CardContent>
       </Card>
     </>
@@ -98,20 +170,18 @@ const RecordList = () => {
   const reversedRecords = records.reverse();
 
   return (
-    <div className="record-list">
-      <Grid container spacing={1}>
-        <Grid item xs={6}>
-          {reversedRecords.map((record, index) =>
-            index % 2 === 0 ? <RecordCard key={record._id} record={record} /> : null
-          )}
-        </Grid>
-        <Grid item xs={6}>
-          {reversedRecords.map((record, index) =>
-            index % 2 === 1 ? <RecordCard key={record._id} record={record} /> : null
-          )}
-        </Grid>
+    <Grid container>
+      <Grid item xs={12} s={6}>
+        {reversedRecords.map((record, index) =>
+          index % 2 === 0 ? <RecordCard key={record._id} record={record} /> : null
+        )}
       </Grid>
-    </div>
+      <Grid item xs={12} s={6}>
+        {reversedRecords.map((record, index) =>
+          index % 2 === 1 ? <RecordCard key={record._id} record={record} /> : null
+        )}
+      </Grid>
+    </Grid>
   );
 };
 
