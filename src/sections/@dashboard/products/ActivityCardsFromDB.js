@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, CardContent, Button, Box } from '@mui/material';
+import { Card, CardContent, Button, Box, Grid } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { TextField } from '@mui/material';
 
-import { Typography, Grid } from '@mui/material';
-import { display, Stack } from '@mui/system';
-
-// import moment from 'moment';
+import { Typography } from '@mui/material';
 
 const RecordCard = ({ record }) => {
   const [date, setDate] = useState(record.date);
@@ -148,14 +145,13 @@ const RecordCard = ({ record }) => {
 
 const RecordList = () => {
   const [records, setRecords] = useState([]);
+  const sortedRecords = records.sort((a, b) => {
+    const dateTimeA = new Date(`${a.date} ${a.time}`);
+    const dateTimeB = new Date(`${b.date} ${b.time}`);
+    return dateTimeB - dateTimeA;
+  });
 
   useEffect(() => {
-    // Get the records from the database
-    axios.get('http://localhost:3000/record/').then((response) => {
-      setRecords(response.data);
-    });
-
-    // Set a timer to refresh the data every 500 milliseconds
     const timer = setInterval(() => {
       // Get the records from the database
       axios.get('http://localhost:3000/record/').then((response) => {
@@ -166,20 +162,13 @@ const RecordList = () => {
     // Clear the timer when the component unmounts
     return () => clearInterval(timer);
   }, []);
-  // Reverse the records array
-  const reversedRecords = records.reverse();
 
   return (
     <Grid container>
       <Grid item xs={12} s={6}>
-        {reversedRecords.map((record, index) =>
-          index % 2 === 0 ? <RecordCard key={record._id} record={record} /> : null
-        )}
-      </Grid>
-      <Grid item xs={12} s={6}>
-        {reversedRecords.map((record, index) =>
-          index % 2 === 1 ? <RecordCard key={record._id} record={record} /> : null
-        )}
+        {sortedRecords.map((record, index) => (
+          <RecordCard key={record._id} record={record} />
+        ))}
       </Grid>
     </Grid>
   );

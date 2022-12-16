@@ -5,23 +5,27 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import React, { useState } from 'react';
 
-const time = new Date();
-const yyyymmdd = new Date().toLocaleDateString('en-CA');
-console.log(yyyymmdd);
-const timeString = time.toTimeString().split(' ')[0].slice(0, 5);
-
 export default function Create({ handleClose }) {
-  const [value, onChange] = useState();
-  const [date, setDate] = useState();
   const [form, setForm] = useState({
-    date: { date }.date,
-    time: { value }.value,
+    date: '',
+    time: '',
     activity: 'Walk',
   });
 
+  React.useEffect(() => {
+    setForm({
+      date: new Date().toISOString().slice(0, 10),
+      time: new Date().toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      }),
+    });
+  }, []);
+
   // These methods will update the state properties.
   function updateForm(value) {
-    return setForm((prev) => {
+    setForm((prev) => {
       return { ...prev, ...value };
     });
   }
@@ -31,9 +35,7 @@ export default function Create({ handleClose }) {
     e.preventDefault();
     handleClose();
     updateForm({ date: form.date, time: form.time, activity: form.activity });
-    if (form.date === undefined || form.time === undefined || form.activity === undefined) {
-      console.log(form.date);
-      console.log(form.time);
+    if (!form.date || !form.time || !form.activity) {
       window.alert('Please enter a date and time');
       e.preventDefault();
       return;
@@ -53,9 +55,6 @@ export default function Create({ handleClose }) {
     });
 
     setForm({ date: '', time: '', activity: '' });
-    // reload table without refreshing page
-
-    // navigate('/dashboard/products');
   }
 
   // This following section will display the form that takes the input from the user.
@@ -69,9 +68,8 @@ export default function Create({ handleClose }) {
             type="date"
             className="form-control"
             id="date"
-            onChange={(e) => updateForm({ date: e.target.value }) && setDate(e.target.value)}
-            value={date}
-            defaultValue={yyyymmdd}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            value={form.date || new Date().toISOString().slice(0, 10)}
           />
           <br />
           <label htmlFor="time">Time: </label>
@@ -79,9 +77,15 @@ export default function Create({ handleClose }) {
             type="time"
             className="form-control"
             id="time"
-            onChange={(e) => updateForm({ time: e.target.value }) && onChange(e.target.value)}
-            value={value}
-            defaultValue={timeString}
+            onChange={(e) => setForm({ ...form, time: e.target.value })}
+            value={
+              form.time ||
+              new Date().toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: false,
+              })
+            }
           />
           <br />
           <FormControl>
